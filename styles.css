@@ -1,0 +1,1195 @@
+/* Общие стили */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #0e1117;
+  color: #c9d1d9;
+  min-height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+header {
+  background-color: #161b22;
+  padding: 15px 20px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  border-bottom: 1px solid #30363d;
+  color: #58a6ff;
+  user-select: none;
+}
+
+main {
+  display: flex;
+  flex: 1;
+  gap: 20px;
+  padding: 20px;
+  overflow: hidden;      /* оставляем */
+  align-items: stretch;  /* растягиваем дочерние */
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
+}
+
+#positions-section {
+  margin: 20px;
+  padding: 15px;
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  overflow-x: auto; /* если таблица будет шире экрана */
+}
+
+#positions-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#positions-section th,
+#positions-section td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #30363d;
+  text-align: center;
+}
+
+#positions-section th {
+  color: #58a6ff;
+  font-weight: 600;
+}
+
+section {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 15px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+h2 {
+  margin: 0 0 15px 0;
+  font-weight: 600;
+  color: #58a6ff;
+}
+
+/* График слева */
+#chart-section {
+  flex: 1 1 auto;     /* график растягивается */
+  display: flex;
+  flex-direction: column;
+}
+
+
+#price-chart {
+  flex: 1 1 auto;
+  min-height: 720px;  /* минимальная высота, чтобы не сжимался */
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background-color: #0e1117;
+
+}
+
+/* Стакан посередине */
+#orderbook-section {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  background-color: #161b22;
+  border-radius: 6px;
+  border: 1px solid #30363d;
+}
+
+#orderbook-container {
+  display: flex;
+  flex-direction: column-reverse;
+  background-color: #151a1f !important;
+  position: relative;
+  overflow: hidden;
+}
+#asks-container,
+#bids-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+#mid-price {
+  flex-shrink: 0;
+  height: 38px;
+  line-height: 38px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  border-top: 1px solid #30363d;
+  border-bottom: 1px solid #30363d;
+  color: #c9d1d9;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+  table-layout: fixed;
+}
+
+thead {
+  background-color: #21262d;
+}
+
+thead th {
+  padding: 8px 6px;
+  text-align: left;
+  color: #8b949e;
+  border-bottom: 1px solid #30363d;
+  user-select: none;
+}
+
+tbody tr {
+  cursor: default;
+  position: relative; /* для объёмных линий */
+  overflow: hidden;
+  transition: background-color 0.15s ease;
+}
+
+tbody tr:hover {
+  background-color: #2d333b;
+}
+
+tbody td {
+  padding: 6px 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#bids-table tbody tr { color: #3fb950; }
+#asks-table tbody tr { color: #f85149; }
+
+/* Линии объема в стакане */
+.volume-line {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  pointer-events: none;
+  border-radius: 4px;
+  transition: width 0.3s ease-out;
+  z-index: 1;
+  opacity: 0.3;
+}
+.volume-line.bid {
+  right: 0;
+  background-color: #3fb950;
+}
+.volume-line.ask {
+  right: 0;
+  background-color: #f85149;
+}
+
+/* ================= Терминал ================= */
+#terminal-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.terminal-top {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.terminal-top select,
+.terminal-top button {
+  background: #0e1117;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  height: 32px;
+}
+
+/* Кнопки выбора типа ордера */
+.order-types {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.order-types button {
+  flex: 1;
+  height: 36px;
+  background: #202534;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #8b949e;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.85rem;
+}
+.order-types button.active {
+  background: #58a6ff;
+  border-color: #58a6ff;
+  color: #fff;
+}
+
+/* Поля ввода */
+.terminal-form .row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.terminal-form input,
+.terminal-form select {
+  background: #0e1117;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  padding: 4px 6px;
+  font-size: 0.85rem;
+  height: 32px;
+}
+.terminal-form label {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+.actions .buy,
+.actions .sell {
+  flex: 1;
+  height: 40px;
+  border-radius: 4px;
+  border: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.actions .buy { background: #238636; color: #fff; }
+.actions .sell { background: #a40e26; color: #fff; }
+
+.terminal-footer {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 12px;
+  font-size: 0.8rem;
+  color: #8b949e;
+  margin-top: 10px;
+}
+.terminal-footer div {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* TP/SL */
+.tpsl-label {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.75rem;
+  color: #c9d1d9;
+  cursor: pointer;
+  line-height: 1.2;
+}
+.tpsl-label input[type="checkbox"] {
+  width: 14px;
+  height: 14px;
+  accent-color: #58a6ff;
+}
+
+.tpsl-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: 6px;
+  background: #1b1f2a;
+  border-radius: 6px;
+  padding: 8px;
+  border: 1px solid #30363d;
+  position: relative;
+}
+
+/* Лента сделок подстраивается */
+#side-panel {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#terminal-section {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 10px;
+  flex-shrink: 0;
+}
+#trades-section {
+  flex: 1;
+  min-height: 120px;
+  max-height: calc(100% - 200px);
+  transition: max-height 0.3s ease;
+}
+
+/* Симметрия */
+.terminal-form .row input,
+.terminal-form .row select,
+.actions button {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Модальное окно для плеча */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+.modal.hidden { display: none; }
+.modal-content {
+  background: #161b22;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  text-align: center;
+}
+
+/* Красивый ползунок */
+.row.slider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.75rem;
+  color: #8b949e;
+}
+.terminal-form input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  background: #30363d;
+  height: 4px;
+  border-radius: 2px;
+}
+.terminal-form input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #58a6ff;
+  cursor: pointer;
+}
+
+/* Лента сделок динамически сжимается */
+#trades-section {
+  flex: 1;
+  min-height: 120px;
+  max-height: calc(100% - 200px);
+  transition: max-height 0.3s ease;
+  overflow: hidden;             /* защита */
+}
+
+/* Когда TP/SL открыт */
+#side-panel.compact #trades-section {
+  max-height: calc(100% - 300px); /* меньше места под ленту */
+}
+
+#trades-list li {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+#trades-list li {
+  max-width: 100%;              /* не шире контейнера */
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border-bottom: 1px solid #30363d;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  opacity: 0;
+  transform: translateX(20px);
+  animation: fadeInSlide 0.5s forwards;
+}
+
+#trades-list li span {
+  flex: 1 1 50%;
+  min-width: 0;        /* обязателен для flex */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+#trades-list li span.price { text-align: left; }
+#trades-list li span.volume { text-align: right; }
+
+#trades-list li.buy { color: #3fb950; }
+#trades-list li.sell { color: #f85149; }
+
+
+@keyframes fadeInSlide {
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Скроллбар */
+#trades-list::-webkit-scrollbar,
+#orderbook-container::-webkit-scrollbar { display: none; }
+
+/* Footer */
+footer {
+  background-color: #161b22;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 0.8rem;
+  color: #484f58;
+  border-top: 1px solid #30363d;
+  user-select: none;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  main { flex-direction: column; padding: 10px; }
+  #orderbook-section,
+  #trades-section {
+    flex: none;
+    width: 100%;
+    max-height: 250px;
+  }
+  #orderbook-container {
+    flex-direction: row;
+    max-height: 200px;
+  }
+}
+
+/* ========== фазы рынка на графике ========== */
+.phase-rect {
+    border-radius: 7px;
+    box-shadow: 0 1px 10px 0 rgba(30,40,60,0.18);
+    transition: left 0.2s, width 0.2s;
+    pointer-events: none;
+}
+#toggle-phase-btn {
+  margin-left: 20px;
+  background: #202534;
+  color: #8b949e;
+  border-radius: 7px;
+  border: none;
+  padding: 6px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+#toggle-phase-btn:hover {
+  background: #232c43;
+  color: #9ab6e4;
+}
+
+#side-panel {
+  flex: 0 0 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+#terminal-section,
+#trades-section {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 10px;
+}
+#terminal-section { min-height: 160px; }
+#trades-section { flex: 1; font-size: 0.8rem; overflow-y: auto; }
+
+/* универсальный класс для скрытия */
+.hidden {
+  display: none !important;
+}
+
+/* TP/SL блок */
+.tpsl-block .row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: nowrap;      /* в одну строку */
+  overflow: hidden;
+}
+
+.tpsl-block label {
+  flex: 0 0 40px;      /* только под текст TP/SL */
+  max-width: 80px;        /* ограничение под надпись */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tpsl-block input[type="number"],
+.tpsl-block select {
+  flex: 1 1 auto;      /* пусть растягивается только в пределах блока */
+  min-width: 0;
+  max-width: 100%;     /* ограничиваем ширину */
+  height: 28px;
+  font-size: 0.85rem;
+  background: #0e1117;
+  border: 1px solid #30363d;
+  border-radius: 4px;
+  color: #c9d1d9;
+  padding: 2px 6px;
+  box-sizing: border-box; /* важно */
+}
+
+
+/* убираем стрелки у input[type=number] */
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield; /* для Firefox */
+}
+
+#positions-section {
+  background-color: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  padding: 15px;
+  margin: 20px;
+  overflow-x: auto;
+}
+
+#positions-section table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+#positions-section th,
+#positions-section td {
+  padding: 6px 10px;
+  border-bottom: 1px solid #30363d;
+  text-align: center;
+}
+#positions-section th { color: #8b949e; }
+
+/* Подсветка PnL */
+#positions-section td.profit {
+  color: #3fb950;  /* зелёный */
+  font-weight: 600;
+}
+#positions-section td.loss {
+  color: #f85149;  /* красный */
+  font-weight: 600;
+}
+
+.range-labels span.active {
+  color: #58a6ff;
+  font-weight: 600;
+}
+
+.close-pos-btn {
+  background: #a40e26;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 8px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+}
+.close-pos-btn:hover {
+  background: #c91632;
+}
+
+.actions .buy { background: #3fb950; }
+.actions .sell { background: #f85149; }
+.actions .buy:hover { background: #4bd160; }
+.actions .sell:hover { background: #ff5a58; }
+
+.close-pos-btn {
+  background: #f6465d;
+}
+.close-pos-btn:hover {
+  background: #ff3347;
+}
+
+/* ==================== CLOSE POSITION MODAL (modern Binance-style) ==================== */
+
+.close-binance {
+  background: #161b22;
+  border-radius: 8px;
+  width: 420px;
+  color: #c9d1d9;
+  font-size: 0.9rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Заголовок */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  background: #1e2329;
+}
+.modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #eaecef;
+}
+.modal-header button {
+  background: none;
+  border: none;
+  color: #707a8a;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.modal-header button:hover {
+  color: #c9d1d9;
+}
+
+/* Информация о позиции */
+.pos-info {
+  padding: 12px 18px;
+}
+.pos-info div {
+  display: grid;
+  grid-template-columns: 140px 1fr; /* первая колонка фикс ширины */
+  align-items: center;
+  margin: 6px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding-bottom: 4px;
+}
+
+.pos-info div span:first-child {
+  color: #8b949e;
+  text-align: left;
+}
+
+.pos-info div span:last-child {
+  text-align: right;
+  white-space: nowrap;  /* не переносим проценты */
+}
+
+.pnl.profit { color: #0ecb81; font-weight: 600; }
+.pnl.loss { color: #f6465d; font-weight: 600; }
+
+/* Поля ввода */
+.close-binance .row {
+  display: flex;
+  align-items: center;
+  padding: 10px 18px;
+  gap: 8px;
+}
+.close-binance label {
+  flex: 0 0 90px;
+  color: #8b949e;
+}
+.close-binance input,
+.close-binance select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid #30363d;
+  border-radius: 6px;
+  background: #0d1117;
+  color: #eaecef;
+  font-size: 0.9rem;
+  transition: border 0.2s, box-shadow 0.2s, background 0.2s;
+}
+.close-binance input:hover,
+.close-binance select:hover {
+  border-color: #58a6ff;
+}
+.close-binance input:focus,
+.close-binance select:focus {
+  border-color: #58a6ff;
+  background: #11161d;
+  box-shadow: 0 0 6px rgba(88,166,255,0.6);
+  outline: none;
+}
+
+/* Ползунок выбора процента */
+#close-range {
+  -webkit-appearance: none;
+  width: calc(100% - 36px);
+  margin: 10px 18px;
+  height: 6px;
+  border-radius: 3px;
+  background: linear-gradient(
+    to right,
+    #58a6ff 0%,
+    #58a6ff var(--range-progress, 0%),
+    #2b3139 var(--range-progress, 0%),
+    #2b3139 100%
+  );
+  cursor: pointer;
+}
+#close-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #58a6ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#close-range::-webkit-slider-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(88,166,255,0.8);
+}
+#close-range::-webkit-slider-thumb:active {
+  transform: scale(1.05);
+}
+#close-range::-moz-range-track {
+  height: 6px;
+  border-radius: 3px;
+  background: #2b3139;
+}
+#close-range::-moz-range-progress {
+  height: 6px;
+  border-radius: 3px;
+  background: #58a6ff;
+}
+#close-range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #58a6ff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+#close-range::-moz-range-thumb:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 8px rgba(88,166,255,0.8);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 18px 12px;
+  font-size: 0.8rem;
+  color: #707a8a;
+}
+.range-labels span.active {
+  color: #58a6ff;
+  font-weight: 600;
+}
+
+/* Итоговый блок */
+.pos-summary {
+  padding: 12px 18px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+.pos-summary div {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+}
+.pos-summary span:first-child {
+  color: #8b949e;
+}
+
+/* Кнопка подтверждения */
+.btn-confirm {
+  width: calc(100% - 36px);
+  margin: 16px auto;
+  background: #58a6ff;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  padding: 14px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+}
+.btn-confirm:hover {
+  background: #79b8ff;
+  box-shadow: 0 2px 8px rgba(88,166,255,0.5);
+  transform: translateY(-1px);
+}
+.btn-confirm:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+.slider-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+:root{
+  --fill: 0%;
+  --fill-color: #3b82f6;     /* цвет прогресса */
+  --track-bg: #222834;       /* фон трека */
+  --mark: #3a404d;           /* цвет рисок 25/50/75 */
+}
+
+/* контейнер */
+.slider-row{ width:100%; }
+
+/* обертка для позиционирования тултипа */
+.slider-wrapper{ position:relative; width:100%; }
+
+/* сам слайдер */
+.slider-wrapper input[type="range"]{
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:6px;
+  border-radius:4px;
+  background:
+    /* заполнение слева направо */
+    linear-gradient(to right, var(--fill-color) 0 var(--fill), var(--track-bg) var(--fill) 100%),
+    /* риски на 25/50/75% */
+    linear-gradient(to right, transparent calc(25% - 1px), var(--mark) calc(25% - 1px) calc(25% + 1px), transparent calc(25% + 1px)),
+    linear-gradient(to right, transparent calc(50% - 1px), var(--mark) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(to right, transparent calc(75% - 1px), var(--mark) calc(75% - 1px) calc(75% + 1px), transparent calc(75% + 1px));
+  background-repeat:no-repeat;
+  outline:none;
+}
+
+/* ползунок (webkit) */
+.slider-wrapper input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:16px; height:16px;
+  border-radius:50%;
+  background:#e5e7eb;
+  border:2px solid #0e1117;
+  cursor:pointer;
+}
+
+.slider-wrapper input[type="range"]{
+  --thumb-w:16px;      /* держи равно фактической ширине бегунка */
+  -webkit-appearance:none;
+  appearance:none;
+  width:100%;
+  height:6px;
+  border-radius:4px;
+  padding:0;           /* важно для точной геометрии */
+  border:none;         /* важно для точной геометрии */
+  background:
+    linear-gradient(to right, var(--fill-color) 0 var(--fill), var(--track-bg) var(--fill) 100%),
+    linear-gradient(to right, transparent calc(25% - 1px), var(--mark) calc(25% - 1px) calc(25% + 1px), transparent calc(25% + 1px)),
+    linear-gradient(to right, transparent calc(50% - 1px), var(--mark) calc(50% - 1px) calc(50% + 1px), transparent calc(50% + 1px)),
+    linear-gradient(to right, transparent calc(75% - 1px), var(--mark) calc(75% - 1px) calc(75% + 1px), transparent calc(75% + 1px));
+  background-repeat:no-repeat;
+  outline:none;
+}
+
+
+/* тултип с “уголком” */
+.slider-tooltip{
+  position:absolute;
+  top:-26px;
+  left:0;
+  transform:translateX(-50%);
+  padding:4px 8px;
+  border-radius:6px;
+  background:#ffffff;   /* белый фон */
+  color:#000000;        /* чёрный текст */
+  font-size:12px;
+  line-height:1;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity .15s ease;
+  white-space:nowrap;
+}
+.slider-tooltip::after{
+  content:"";
+  position:absolute;
+  left:50%; transform:translateX(-50%);
+  top:100%;
+  border:6px solid transparent;
+  border-top-color:#ffffff; /* уголок тоже белый */
+}
+
+
+/* фикс вылазящих TP/SL */
+.tpsl-block {
+  overflow: hidden;       /* ничего не вылазит за границы */
+  max-width: 100%;        /* блок всегда в пределах контейнера */
+  box-sizing: border-box; /* учитываем padding/border */
+}
+
+.tpsl-block .row {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+
+.tpsl-block label {
+  flex: 0 0 auto;
+  max-width: 70px;        /* ограничиваем ширину подписи (TP/SL, Маркир) */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tpsl-block input[type="number"],
+.tpsl-block select {
+  flex: 1 1 auto;
+  min-width: 0;           /* ключевой фикс для flex */
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* TP/SL: текст рядом с чекбоксом */
+.terminal-form .tpsl-label{
+  justify-content: flex-start;
+  gap: 6px;
+  flex: 0 0 auto;   /* не растягивать label */
+}
+.terminal-form .tpsl-label input[type="checkbox"]{
+  margin: 0;        /* убрать дефолтные отступы */
+}
+
+/* overlay для перетаскивания TP/SL */
+.chart-overlay{position:absolute;inset:0;pointer-events:none;z-index:5}
+.chart-overlay .drag-line{position:absolute;left:0;width:100%;height:2px;pointer-events:auto;cursor:ns-resize}
+.chart-overlay .drag-line.tp{background:#3fb950}
+.chart-overlay .drag-line.sl{background:#f85149}
+
+.header-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #161b22; /* тот же цвет, что был в index.html */
+    border-bottom: 1px solid #30363d;
+}
+
+.header-bar .title {
+    margin: 0;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #58a6ff;
+}
+
+
+
+.profile-icon img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.profile-icon img:hover {
+  box-shadow: 0 0 8px #58a6ff; /* голубое свечение */
+  filter: brightness(1.05);
+  transform: scale(1.07);
+}
+
+
+/* ===== PROFILE PAGE ===== */
+.profile-body {
+  display: flex;
+  background: #0e1117;
+  color: #c9d1d9;
+  font-family: 'Segoe UI', sans-serif;
+  min-height: 100vh;
+}
+
+/* Левая колонка меню */
+.sidebar {
+  width: 200px;
+  background: #161b22;
+  min-height: 100vh;
+  padding: 20px;
+}
+.sidebar ul { list-style: none; margin: 0; padding: 0; }
+.sidebar li { margin: 15px 0; }
+.sidebar a {
+  color: #ddd;
+  text-decoration: none;
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.sidebar a:hover { background: #1f242c; }
+.sidebar a.active { color: #58a6ff; font-weight: bold; }
+
+/* Контент справа */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Панель юзера сверху */
+.topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: #161b22;
+  border-bottom: 1px solid #30363d;
+  padding: 12px 20px;
+}
+
+.user-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #58a6ff;
+  object-fit: cover;
+}
+
+.user-id {
+  font-size: 0.85rem;
+  color: #8b949e;
+}
+
+/* Контент профиля */
+.profile-main {
+  flex: 1;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.profile-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.profile-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(0,0,0,0.8);
+}
+
+.profile-main h3 {
+  color: #58a6ff;
+  margin-bottom: 12px;
+}
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: repeat(2,1fr);
+  gap: 12px;
+}
+.balance-grid div {
+  background: #1e2329;
+  padding: 12px 14px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+}
+.balance-grid strong {
+  color: #0ecb81;
+  font-weight: 600;
+}
+
+.profile-history table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.profile-history th, .profile-history td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #30363d;
+  text-align: center;
+}
+.profile-history th {
+  background: #1e2329;
+  color: #8b949e;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.profile-history td { color: #c9d1d9; }
+.profile-history tbody tr:hover { background: #1b1f2a; }
+
+.profile-card {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 24px;              /* больше отступы */
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6);
+}
+
+.balance-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.balance-grid div {
+  background: #1e2329;
+  padding: 18px;
+  border-radius: 10px;
+  font-size: 1rem;            /* крупнее */
+  display: flex;
+  justify-content: space-between;
+  font-weight: 500;
+}
+
+.sidebar a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #1e2329;
+  margin-bottom: 10px;
+  color: #c9d1d9;
+  transition: background 0.2s, color 0.2s;
+}
+.sidebar a:hover {
+  background: #232a35;
+  color: #58a6ff;
+}
+.sidebar a.active {
+  background: #58a6ff;
+  color: #fff;
+}
+
+#tf-selector button.active {
+  background-color: #58a6ff;
+  color: #fff;
+  font-weight: 600;
+}
+
+#profile-trades tr.buy-trade td { color: #3fb950; }
+#profile-trades tr.sell-trade td { color: #f85149; }

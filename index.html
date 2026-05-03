@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Realistic Exchange Simulator</title>
+    <!-- Подключаем стили -->
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        /* Стили */
+        body {
+          margin: 0;
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #0e1117;
+          color: #c9d1d9;
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;   /* вместо height */
+          overflow-x: hidden;  /* убрали блокировку */
+          overflow-y: auto;    /* разрешаем скролл вниз */
+        }
+        header {
+            background-color: #161b22;
+            padding: 15px 20px;
+            font-size: 1.4rem;
+            font-weight: 600;
+            border-bottom: 1px solid #30363d;
+            color: #58a6ff;
+        }
+        main {
+          display: flex;
+          flex: 1;
+          gap: 20px;
+          padding: 20px;
+          overflow: visible;   /* позволяем контенту расти */
+          align-items: flex-start; /* фикс против сжатия */
+        }
+        section {
+            background-color: #161b22;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 15px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            margin: 0 0 15px 0;
+            font-weight: 600;
+            color: #58a6ff;
+        }
+
+        /* График слева */
+        #chart-section {
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+        }
+        #price-chart {
+            flex: 1;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            background-color: #0e1117;
+        }
+
+        /* Таймфрейм-селектор */
+        #tf-selector {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        #tf-selector button {
+            padding: 8px 15px;
+            background-color: #30363d;
+            border: none;
+            border-radius: 5px;
+            color: #c9d1d9;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #tf-selector button:hover {
+            background-color: #58a6ff;
+        }
+
+        /* Стакан посередине */
+        #orderbook-section {
+            flex: 0 0 340px;
+            display: flex;
+            flex-direction: column;
+            font-size: 0.85rem;
+        }
+
+        #orderbook-container {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow-y: auto;
+            background-color: #0e1117;
+            padding: 5px;
+        }
+
+        .orderbook-header {
+            display: flex;
+            justify-content: space-between;
+            color: #8b949e;
+            font-weight: 600;
+            padding: 5px 10px;
+            font-size: 0.8rem;
+            background-color: #161b22;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .orderbook-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 10px;
+            position: relative;
+            font-variant-numeric: tabular-nums;
+            white-space: nowrap;
+        }
+
+        .orderbook-row.buy {
+            color: #3fb950;
+        }
+
+        .orderbook-row.sell {
+            color: #f85149;
+        }
+
+        .volume-bar {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .volume-bar.buy {
+             left: 0;
+             background-color: #3fb950;
+        }
+
+        .volume-bar.sell {
+            right: 0;
+            background-color: #f85149;
+        }
+
+        .orderbook-row .price,
+        .orderbook-row .volume,
+        .orderbook-row .total {
+            z-index: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .orderbook-row .price {
+            text-align: center;
+            width: 40%;
+        }
+
+        .orderbook-row .volume {
+            text-align: left;
+            width: 30%;
+        }
+
+        .orderbook-row .total {
+            text-align: right;
+            width: 30%;
+        }
+
+        #trades-section {
+            flex: 1;
+            overflow-y: auto;
+            min-width: 0;   /* вот ключ */
+        }
+
+        #trades-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            font-size: 0.9rem;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        #trades-list li {
+            padding: 6px 8px;
+            border-bottom: 1px solid #30363d;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            opacity: 0;
+            transform: translateX(20px);
+            animation: fadeInSlide 0.5s forwards;
+        }
+        #trades-list li.buy {
+            color: #3fb950;
+        }
+        #trades-list li.sell {
+            color: #f85149;
+        }
+        @keyframes fadeInSlide {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Скроллбары */
+        #trades-list::-webkit-scrollbar,
+        #orderbook-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        #trades-list::-webkit-scrollbar-thumb,
+        #orderbook-container::-webkit-scrollbar-thumb {
+            background-color: #30363d;
+            border-radius: 4px;
+        }
+        #trades-list::-webkit-scrollbar-track,
+        #orderbook-container::-webkit-scrollbar-track {
+            background-color: #0e1117;
+        }
+
+        footer {
+            background-color: #161b22;
+            text-align: center;
+            padding: 10px 0;
+            font-size: 0.8rem;
+            color: #484f58;
+            border-top: 1px solid #30363d;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <header class="header-bar">
+      <h1 class="title">Realistic Exchange Simulator</h1>
+        <div class="profile-icon" onclick="openProfile()">
+          <img src="/images/profile.png" alt="Profile">
+        </div>
+    </header>
+
+    <main>
+        <section id="chart-section" aria-label="Price Chart">
+            <h2>График цены</h2>
+            <!-- Таймфрейм-селектор для выбора интервала -->
+            <div id="tf-selector">
+                <button data-tf="1">1 с</button>
+                <button data-tf="15">15 с</button>
+                <button data-tf="60">1 м</button>
+                <button data-tf="300">5 м</button>
+                <button data-tf="3600">1 ч</button>
+            </div>
+            <button id="toggle-phase-btn" style="padding:6px 18px; border-radius:7px; background:#202534; color:#8b949e; border:none; margin-left:25px;">
+                Показать фазы рынка
+            </button>
+            <div id="price-chart"></div>
+        </section>
+
+        <section id="orderbook-section" aria-label="Order Book">
+            <h2>Биржевой стакан</h2>
+            <div class="orderbook-header">
+                <span>Цена</span>
+                <span>Объём</span>
+            </div>
+            <div id="orderbook-container">
+                <div id="asks-container"></div>
+
+                <div id="mid-price" class="mid-price">–</div>
+
+                <div id="bids-container"></div>
+            </div>
+        </section>
+
+        <section id="side-panel">
+          <section id="terminal-section" aria-label="Terminal">
+            <h2>Терминал</h2>
+
+            <!-- верхняя панель -->
+            <div class="terminal-top">
+              <select id="margin-mode">
+                <option>Кросс</option>
+                <option>Изолированное</option>
+              </select>
+              <select id="leverage">
+                <option>1x</option>
+                <option>5x</option>
+                <option>10x</option>
+                <option selected>20x</option>
+                <option>50x</option>
+                <option>100x</option>
+                <option>125x</option>
+              </select>
+
+              <select id="contract-size">
+                <option>S</option>
+                <option>M</option>
+                <option>L</option>
+              </select>
+            </div>
+
+            <!-- тип ордера -->
+            <div class="order-types">
+              <button data-type="limit" class="active">Лимит</button>
+              <button data-type="market">Рынок</button>
+            </div>
+
+            <!-- форма -->
+            <div class="terminal-form">
+              <div class="row" id="price-row">
+                <label>Цена <input type="number" id="order-price" placeholder="По рынку"></label>
+              </div>
+              <div class="row">
+                <label>Кол. <input type="number" id="order-qty"></label>
+              </div>
+            <div class="slider-row">
+              <div class="slider-wrapper">
+                <input id="volumeSlider" type="range" min="0" max="100" step="1" />
+                <div id="volumeTooltip" class="slider-tooltip">0%</div>
+              </div>
+            </div>
+
+          <div class="row">
+            <label class="tpsl-label">
+              <input type="checkbox" id="enable-tpsl">
+              TP/SL
+            </label>
+          </div>
+
+          <!-- TP/SL -->
+          <div id="tpsl-block" class="tpsl-block hidden">
+            <div class="row" id="tp-row">
+              <label>TP</label>
+              <button type="button" class="add-tp">+</button>
+            </div>
+            <div class="row" id="sl-row">
+              <label>SL</label>
+              <button type="button" class="add-sl">+</button>
+            </div>
+          </div>
+
+
+
+          <!-- кнопки -->
+          <div class="actions">
+            <button class="buy">Купить / Лонг</button>
+            <button class="sell">Продать / Шорт</button>
+          </div>
+
+          <!-- подвал -->
+          <div class="terminal-footer">
+            <div><span>Доступно:</span> <span id="available">0.00 USDT</span></div>
+            <div><span>Стоимость:</span> <span id="cost">0.00</span></div>
+            <div><span>Макс:</span> <span id="max">0.00</span></div>
+            <div><span>Ликвидация:</span> <span id="liq">--</span></div>
+            <div><span>Комиссии:</span> <span id="fee">0.00</span></div>
+          </div>
+        </section>
+
+  <section id="trades-section" aria-label="Trade Tape">
+    <h2>Лента сделок</h2>
+    <ul id="trades-list" role="list"></ul>
+  </section>
+</section>
+</main>
+
+
+<section id="positions-section">
+  <h2>Открытые позиции</h2>
+  <table id="positions-table">
+    <thead>
+      <tr>
+        <th>Направление</th>
+        <th>Объём</th>
+        <th>Цена входа</th>
+        <th>Текущая цена</th>
+        <th>UPnL</th>
+        <th>Реализ. PnL</th>
+        <th>Маржа</th>
+        <th>Ликвидация</th>
+        <th>Действие</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- сюда будут добавляться строки -->
+    </tbody>
+  </table>
+</section>
+
+
+    <footer>
+        © 2025 Realistic Exchange Simulator
+    </footer>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://pixijs.download/release/pixi.min.js"></script>
+    <script type="module" src="./chart/index.js"></script>
+
+
+
+    <div id="leverage-modal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Изменить плечо</h3>
+        <input type="range" id="leverage-range" min="1" max="125" value="20">
+        <p><span id="leverage-value">20x</span></p>
+        <button id="lev-confirm">Подтвердить</button>
+      </div>
+    </div>
+
+
+    <div id="close-modal" class="modal hidden">
+      <div class="modal-content close-binance">
+        <div class="modal-header">
+          <h3>Закрыть позицию</h3>
+          <button id="close-x">&times;</button>
+        </div>
+
+        <div class="pos-info">
+          <div><span>Символ:</span> <span id="close-symbol">—</span></div>
+          <div><span>Цена входа:</span> <span id="close-entry">—</span></div>
+          <div><span>Маркировка:</span> <span id="close-mark">—</span></div>
+          <div><span>PNL:</span> <span id="close-pnl" class="pnl">—</span></div>
+        </div>
+
+        <div class="row">
+          <label>Тип</label>
+          <select id="close-type">
+            <option value="market">Рынок</option>
+            <option value="limit">Лимит</option>
+          </select>
+        </div>
+
+        <div class="row">
+          <label>Цена</label>
+          <input id="close-price" type="number" placeholder="По рынку">
+        </div>
+
+        <div class="row">
+          <label>Объём</label>
+          <input id="close-qty" type="number" placeholder="0 = всё">
+        </div>
+
+        <div class="row slider">
+          <input type="range" id="close-range" min="0" max="100" step="25" value="0">
+        </div>
+        <div class="range-labels">
+          <span>25%</span><span>50%</span><span>75%</span><span>100%</span>
+        </div>
+
+        <div class="pos-summary">
+          <div><span>Сумма позиции:</span> <span id="close-pos-sum">—</span></div>
+          <div><span>Расч. PnL:</span> <span id="close-pos-pnl" class="pnl">—</span></div>
+        </div>
+
+        <button id="close-confirm" class="btn-confirm">Подтвердить</button>
+      </div>
+    </div>
+
+    <script>
+      function openProfile() {
+        window.location.href = '/profile';
+      }
+    </script>
+
+
+</body>
+</html>
+
+

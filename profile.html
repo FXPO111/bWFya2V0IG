@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Профиль</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="profile-body">
+
+  <!-- Левая колонка меню -->
+  <aside class="sidebar">
+    <ul>
+      <li><a href="/">Терминал</a></li>
+      <li><a href="/profile" class="active">Профиль</a></li>
+      <li><a href="#">Настройки</a></li>
+    </ul>
+  </aside>
+
+
+  <!-- Контент -->
+  <div class="content">
+    <!-- Панель юзера сверху -->
+    <header class="topbar">
+      <div class="user-panel">
+        <img src="/images/profile.png" class="user-avatar" alt="Profile">
+        <span id="profile-name">User</span>
+        <span class="user-id">ID: <span id="profile-id">123456</span></span>
+      </div>
+    </header>
+
+    <main class="profile-main">
+      <section class="profile-card profile-balance">
+        <h3>Баланс</h3>
+        <div class="balance-grid">
+          <div><span>Доступно:</span> <strong id="acc-balance">0.00</strong></div>
+          <div><span>Equity:</span> <strong id="acc-equity">0.00</strong></div>
+          <div><span>Realized PnL:</span> <strong id="acc-realized">0.00</strong></div>
+          <div><span>Unrealized PnL:</span> <strong id="acc-upnl">0.00</strong></div>
+        </div>
+      </section>
+
+      <section class="profile-card profile-history">
+        <h3>История сделок</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Время</th>
+              <th>Сторона</th>
+              <th>Цена</th>
+              <th>Кол-во</th>
+              <th>Fee</th>
+              <th>PnL</th>
+              <th>PnL %</th>
+            </tr>
+          </thead>
+          <tbody id="profile-trades"></tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script type="module">
+    import { initSocketIO } from './scripts.js';
+    document.addEventListener('DOMContentLoaded', () => initSocketIO());
+  </script>
+
+
+</body>
+</html>
+
